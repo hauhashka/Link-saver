@@ -8,6 +8,7 @@ class LinkCreate(BaseModel):
     title: str
     url: HttpUrl
     description: str | None = None
+    is_favorite: bool = False
 
 
 class Link(LinkCreate):
@@ -24,8 +25,11 @@ def health_check():
 
 
 @app.get("/links")
-def get_links():
-    return links
+def get_links(favorite: bool | None = None):
+    if favorite is None:
+        return links
+
+    return [link for link in links if link.is_favorite == favorite]
 
 
 @app.post("/links", status_code=201)
@@ -37,6 +41,7 @@ def create_link(link_data: LinkCreate):
         title=link_data.title,
         url=link_data.url,
         description=link_data.description,
+        is_favorite=link_data.is_favorite,
     )
 
     links.append(new_link)
@@ -63,6 +68,7 @@ def update_link(link_id: int, link_data: LinkCreate):
                 title=link_data.title,
                 url=link_data.url,
                 description=link_data.description,
+                is_favorite=link_data.is_favorite,
             )
 
             links[index] = updated_link
