@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: link_saver_db
+    environment:
+      POSTGRES_DB: link_saver
+      POSTGRES_USER: link_saver_user
+      POSTGRES_PASSWORD: link_saver_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
