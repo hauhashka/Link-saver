@@ -54,6 +54,23 @@ def get_link(link_id: int):
     raise HTTPException(status_code=404, detail="Link not found")
 
 
+@app.put("/links/{link_id}")
+def update_link(link_id: int, link_data: LinkCreate):
+    for index, link in enumerate(links):
+        if link.id == link_id:
+            updated_link = Link(
+                id=link.id,
+                title=link_data.title,
+                url=link_data.url,
+                description=link_data.description,
+            )
+
+            links[index] = updated_link
+            return updated_link
+
+    raise HTTPException(status_code=404, detail="Link not found")
+
+
 @app.delete("/links/{link_id}")
 def delete_link(link_id: int):
     for index, link in enumerate(links):
