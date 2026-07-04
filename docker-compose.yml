@@ -11,5 +11,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  api:
+    build: .
+    container_name: link_saver_api
+    environment:
+      DATABASE_URL: postgresql+psycopg://link_saver_user:link_saver_password@db:5432/link_saver
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
 volumes:
   postgres_data:
