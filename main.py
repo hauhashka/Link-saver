@@ -25,11 +25,31 @@ def health_check():
 
 
 @app.get("/links")
-def get_links(favorite: bool | None = None):
-    if favorite is None:
-        return links
+def get_links(
+    favorite: bool | None = None,
+    search: str | None = None,
+):
+    filtered_links = links
 
-    return [link for link in links if link.is_favorite == favorite]
+    if favorite is not None:
+        filtered_links = [
+            link for link in filtered_links
+            if link.is_favorite == favorite
+        ]
+
+    if search is not None:
+        search_lower = search.lower()
+
+        filtered_links = [
+            link for link in filtered_links
+            if search_lower in link.title.lower()
+            or (
+                link.description is not None
+                and search_lower in link.description.lower()
+            )
+        ]
+
+    return filtered_links
 
 
 @app.post("/links", status_code=201)
